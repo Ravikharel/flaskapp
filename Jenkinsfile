@@ -15,9 +15,8 @@ pipeline{
                     sh "docker image build -t ${IMAGE_NAME}/${IMAGE_WEB}:${IMAGE_TAG} ."
                 }
             }
-
+            
         }
-        stage("")
         stage('Pushing the image to the harbor'){ 
             steps{ 
                 script{ 
