@@ -1,5 +1,7 @@
 pipeline{
-    agent any
+    agent {
+        label "vagrant-slave"
+    }
     environment{ 
         IMAGE_NAME = "harbor.registry.local/flaskproject"
         IMAGE_WEB = "web"
@@ -15,6 +17,7 @@ pipeline{
             }
 
         }
+        stage("")
         stage('Pushing the image to the harbor'){ 
             steps{ 
                 script{ 
@@ -31,6 +34,15 @@ pipeline{
                 script{ 
                     sh '''
                         docker compose up -d 
+                    '''
+                }
+            }
+        }
+        stage('Checking the Container'){ 
+            steps{ 
+                script{ 
+                    sh '''
+                        docker compose ps  
                     '''
                 }
             }
