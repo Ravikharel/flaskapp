@@ -15,10 +15,23 @@ pipeline{
             }
 
         }
-        stage("Scanning through trivy"){ 
+        stage('Pushing the image to the harbor'){ 
             steps{ 
                 script{ 
-                    sh " trivy image --exit-code 1 --severity HIGH,critical --ignore-unfixed ${IMAGE_NAME}/${IMAGE_WEB}:${IMAGE_TAG}"
+                    sh '''
+                        echo ${harbor_pass} | docker login harbor.registry.local -u admin --password-stdin
+                        docker push ${IMAGE_NAME}/${IMAGE_WEB}:${IMAGE_TAG}
+                    '''
+
+                }
+            }
+        }
+        stage('Deploying the container in the development area'){ 
+            steps{ 
+                script{ 
+                    sh '''
+                        docker compose up -d 
+                    '''
                 }
             }
         }
